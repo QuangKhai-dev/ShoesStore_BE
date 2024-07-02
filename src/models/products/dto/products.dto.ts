@@ -1,0 +1,11 @@
+export class CreateProductDto {
+  name: string;
+
+  description: string;
+
+  price: number;
+
+  categoryId: number;
+
+  quantity: number;
+}
