@@ -6,6 +6,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Query,
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
@@ -82,5 +83,12 @@ export class ProductsController {
       return `${baseUrl}/media/${file.filename}`;
     });
     return imagePath;
+  }
+
+  // Phân trang cho sản phẩm
+  async paginationListProduct(
+    @Query() dto: { sort: string; page: number; limit: number },
+  ) {
+    return this.productsService.paginationListProduct(dto);
   }
 }

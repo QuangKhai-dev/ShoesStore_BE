@@ -9,6 +9,7 @@ import {
 import { ProductImagesEntity } from './product-images.entity';
 import { CategoriesEntity } from 'src/models/categories/entity/categories.entity';
 import { ProductAttributeEntity } from './product-attribute.entity';
+import { productEnum } from 'src/enum/product.enum';
 
 @Entity('products')
 export class ProductEntity {
@@ -26,6 +27,9 @@ export class ProductEntity {
 
   @Column()
   quantity: number;
+
+  @Column()
+  status: productEnum;
 
   @Column({
     default: () => 'CURRENT_TIMESTAMP',

@@ -92,4 +92,12 @@ export class ProductsService {
     await this.productAttriEntity.save(newProductAttribute);
     return 'Tạo thuộc tính sản phẩm thành công';
   }
+
+  async paginationListProduct(dto: {
+    sort: string;
+    page: number;
+    limit: number;
+  }) {
+    console.log(dto);
+  }
 }

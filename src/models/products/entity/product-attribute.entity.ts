@@ -19,13 +19,13 @@ export class ProductAttributeEntity {
   @Column()
   attributeTypeId: number;
 
-  @ManyToOne(() => ProductEntity, (product) => product.id)
-  @JoinColumn({ name: 'productId' })
-  product: ProductEntity;
-
   @ManyToOne(() => AttributeTypeEntity, (attributeType) => attributeType.id, {
     eager: true,
   })
   @JoinColumn({ name: 'attributeTypeId' })
   attributeType: AttributeTypeEntity;
+
+  @ManyToOne(() => ProductEntity, (product) => product.id)
+  @JoinColumn({ name: 'productId' })
+  product: ProductEntity;
 }
