@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { ProductImagesEntity } from './product-images.entity';
 import { CategoriesEntity } from 'src/models/categories/entity/categories.entity';
+import { ProductAttributeEntity } from './product-attribute.entity';
 
 @Entity('products')
 export class ProductEntity {
@@ -43,4 +44,10 @@ export class ProductEntity {
   @ManyToOne(() => CategoriesEntity, (category) => category.products)
   @JoinColumn({ name: 'categoryId' })
   category: CategoriesEntity;
+
+  @OneToMany(
+    () => ProductAttributeEntity,
+    (productAttribute) => productAttribute.product,
+  )
+  productAttributes: ProductAttributeEntity[];
 }

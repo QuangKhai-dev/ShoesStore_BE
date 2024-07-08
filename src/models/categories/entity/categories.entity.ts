@@ -17,8 +17,8 @@ export class CategoriesEntity {
   })
   createdAt: Date;
 
-  @Column()
-  categoryParentId: number;
+  @Column({ nullable: true })
+  categoryParentId?: number;
 
   @OneToMany(() => ProductEntity, (product) => product.category)
   products: ProductEntity[];
