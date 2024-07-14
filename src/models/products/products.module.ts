@@ -3,20 +3,25 @@ import { ProductsService } from './products.service';
 import { ProductsController } from './products.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductEntity } from './entity/product.entity';
-import { AttributeTypeEntity } from './entity/attribute-type.entity';
-import { AttributeValueEntity } from './entity/attribute-value.entity';
-import { ProductAttributeEntity } from './entity/product-attribute.entity';
+
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { CloudinaryModule } from 'src/upload/cloudinary.module';
+import { OptionsEntity } from './entity/options.entity';
+import { OptionValueEntity } from './entity/option-value.entity';
+import { ProductOptionEntity } from './entity/product-options.entity';
+import { ProductImagesEntity } from './entity/product-images.entity';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     TypeOrmModule.forFeature([
       ProductEntity,
-      AttributeTypeEntity,
-      AttributeValueEntity,
-      ProductAttributeEntity,
+      OptionsEntity,
+      OptionValueEntity,
+      ProductOptionEntity,
+      ProductImagesEntity,
     ]),
+    CloudinaryModule,
   ],
   controllers: [ProductsController],
   providers: [ProductsService, ConfigService],

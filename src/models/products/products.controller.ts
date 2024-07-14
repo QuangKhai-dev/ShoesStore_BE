@@ -26,26 +26,24 @@ export class ProductsController {
     private readonly configService: ConfigService,
   ) {}
 
-  // Tạo danh sách các thuộc tính của sản phẩm - Mỗi sản phẩm có các thuộc tính khác nhau
-  @Post('create-product-attribute')
-  async createProductAttribute(
-    @Body() dto: { productId: number; attributeTypeId: number },
-  ) {
-    return this.productsService.createProductAttribute(dto);
+  // Thêm option cho các sản phẩm đã có
+  @Post('add-option-product')
+  async addOptionProduct(@Body() dto: { productId: number; optionId: number }) {
+    return this.productsService.addOptionProduct(dto);
   }
 
-  // Tạo danh sách các thuộc tính mẫu của sản phẩm
-  @Post('create-attribute-type')
-  async createAttributeType(@Body() dto: { name: string }) {
-    return this.productsService.createAttributeType(dto);
+  // Tạo option mẫu cho sản phẩm
+  @Post('create-options')
+  async createOptions(@Body() dto: { name: string }) {
+    return this.productsService.createOptions(dto);
   }
 
-  // Tạo danh sách các giá trị cho thuộc tính của sản phẩm
-  @Post('create-attribute-value')
-  async createAttributeValue(
-    @Body() dto: { typeId: number; values: string[] },
+  // Tạo giá trị cho option
+  @Post('create-option-values')
+  async createOptionValues(
+    @Body() dto: { values: string[]; optionId: number },
   ) {
-    return this.productsService.createAttributeValue(dto);
+    return this.productsService.createOptionValues(dto);
   }
 
   // Tạo sản phẩm
@@ -55,13 +53,17 @@ export class ProductsController {
   }
 
   // Lấy thông tin sản phẩm theo id
-  @Get(':id')
-  async getOne(@Param('id', ParseIntPipe) id: number) {
-    return this.productsService.getById(id);
+  @Get(':id/:sku')
+  async getOne(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('sku') sku: string,
+  ) {
+    console.log(sku);
+    return this.productsService.getById(id, sku);
   }
 
   // Upload ảnh sản phẩm
-  @Post('upload-images')
+  @Post('upload-images-local')
   @UseInterceptors(
     FileFieldsInterceptor([{ name: 'image', maxCount: 8 }], {
       storage: multerConfigLocal.storage,
@@ -85,10 +87,39 @@ export class ProductsController {
     return imagePath;
   }
 
-  // Phân trang cho sản phẩm
-  async paginationListProduct(
-    @Query() dto: { sort: string; page: number; limit: number },
+  @Post('upload-images/:id')
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'image', maxCount: 8 }]))
+  async uploadImages(
+    @UploadedFiles()
+    files: {
+      image?: Express.Multer.File[];
+    },
+    @Param('id', ParseIntPipe) id: number,
   ) {
-    return this.productsService.paginationListProduct(dto);
+    if (!files || !files.image) {
+      throw new BadRequestException('Không tìm thấy file image');
+    }
+
+    return this.productsService.uploadImageCloudinary(files.image, id);
+  }
+
+  // Phân trang cho sản phẩm
+  @Get()
+  async paginationListProduct(
+    @Query()
+    query: {
+      page: number;
+      limit: number;
+      sort: string;
+      order: 'ASC' | 'DESC';
+    },
+  ) {
+    const { page = 1, limit = 10, sort = 'id', order = 'ASC' } = query;
+    return this.productsService.paginationListProduct({
+      page,
+      limit,
+      sort,
+      order,
+    });
   }
 }

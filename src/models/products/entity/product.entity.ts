@@ -6,10 +6,10 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { ProductImagesEntity } from './product-images.entity';
 import { CategoriesEntity } from 'src/models/categories/entity/categories.entity';
-import { ProductAttributeEntity } from './product-attribute.entity';
 import { productEnum } from 'src/enum/product.enum';
+import { ProductOptionEntity } from './product-options.entity';
+import { ProductSkuEntity } from './product-sku.entity';
 
 @Entity('products')
 export class ProductEntity {
@@ -42,16 +42,13 @@ export class ProductEntity {
   @Column()
   categoryId: number;
 
-  @OneToMany(() => ProductImagesEntity, (image) => image.product)
-  images: ProductImagesEntity[];
-
   @ManyToOne(() => CategoriesEntity, (category) => category.products)
   @JoinColumn({ name: 'categoryId' })
   category: CategoriesEntity;
 
-  @OneToMany(
-    () => ProductAttributeEntity,
-    (productAttribute) => productAttribute.product,
-  )
-  productAttributes: ProductAttributeEntity[];
+  @OneToMany(() => ProductOptionEntity, (option) => option.product)
+  productOptions: ProductOptionEntity[];
+
+  @OneToMany(() => ProductSkuEntity, (sku) => sku.product)
+  productSkus: ProductSkuEntity[];
 }

@@ -5,7 +5,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { ProductEntity } from './product.entity';
+import { ProductSkuEntity } from './product-sku.entity';
 
 @Entity('product_images')
 export class ProductImagesEntity {
@@ -15,7 +15,13 @@ export class ProductImagesEntity {
   @Column()
   imageUrl: string;
 
-  @ManyToOne(() => ProductEntity, (product) => product.images)
-  @JoinColumn({ name: 'productId' })
-  product: ProductEntity;
+  @Column()
+  index: number;
+
+  @Column()
+  productSkuId: number;
+
+  @ManyToOne(() => ProductSkuEntity, (sku) => sku.images)
+  @JoinColumn({ name: 'productSkuId' })
+  sku: ProductSkuEntity;
 }
