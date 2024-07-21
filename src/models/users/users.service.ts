@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { RegisterDto } from './dto/user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entity/user.entity';
@@ -11,16 +11,15 @@ export class UsersService {
     private readonly userEntity: Repository<UserEntity>,
   ) {}
 
-  async create(dto: RegisterDto) {
-    // thực hiện kiểm tra email đã tồn tại chưa
-    const isExist = await this.userEntity.findOne({
+  async checkEmailExist(email: string) {
+    return await this.userEntity.findOne({
       where: {
-        email: dto.email,
+        email,
       },
     });
-    if (isExist) {
-      throw new BadRequestException('Email đã tồn tại');
-    }
+  }
+
+  async create(dto: RegisterDto) {
     // mã hoá mật khẩu
     const salt = bcrypt.genSaltSync(10);
     const passwordHash = bcrypt.hashSync(dto.password, salt);
@@ -33,15 +32,11 @@ export class UsersService {
     return 'Tạo người dùng thành công';
   }
 
-  findAll() {
-    return `This action returns all users`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async findOne(email: string) {
+    return await this.userEntity.findOne({
+      where: {
+        email,
+      },
+    });
   }
 }

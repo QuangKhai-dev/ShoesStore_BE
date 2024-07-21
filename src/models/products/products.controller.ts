@@ -18,8 +18,10 @@ import {
   multerOptionsLocal,
 } from 'src/config/multer/multer-local.config';
 import { ConfigService } from '@nestjs/config';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('products')
+@ApiTags('products')
 export class ProductsController {
   constructor(
     private readonly productsService: ProductsService,
